@@ -16,7 +16,7 @@ Activar transmision de caracter de checksum
 var http = require('http');
 const sp = require('serialport');
 var process = require('process');
-var puerto = '/dev/ttyUSB0'; // En mi caso, tuve que usar un adaptador
+var puerto = '/dev/ttyS0'; // En mi caso, tuve que usar un adaptador
 var puertoAPI = 3001;
 var comandoPeso = [0x53,0x31,0x31,0x0d]; // Ahi dice 'S11\n'
 var datosEjemplo = false;
@@ -74,9 +74,9 @@ try {
     });
     conn.on('data',(d)=>{
         var bf = d.toString('utf8');
-        //console.log("Escaneado",d,bf);
+        console.log("Escaneado",d,bf);
         codigo += bf.trim();
-        if(bf.trim()=='') { // Retorno indica fin de respuesta
+        if(bf.indexOf('\n')!=-1 || bf.indexOf('\r')!=-1) { // Retorno indica fin de respuesta
             //setTimeout(()=>{
             if(codigo && codigo.length>0) {
                 if(codigo.startsWith('S08')) {
